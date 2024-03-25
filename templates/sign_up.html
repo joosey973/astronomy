@@ -1,0 +1,17 @@
+{%extends "sign_in_up_pattern.html"%} {%block content%}
+<h3>Sign up</h3>
+<form action="" method="post">
+  {{ form.hidden_tag() }} {%for field in form if field.name != 'csrf_token' and
+  field.name != 'submit'%} {{field.label}} <br />
+  {{field(class='form-control')}} <br />
+  {%endfor%}
+  <a
+      href="/astronomy-site/astronomy_sign_in"
+      style="text-decoration: none; color: grey"
+      ><h6>Sign in</h6></a
+    >
+    <br />
+  {{message}} <br />
+  {{form.submit(type="submit", class="btn btn-md btn-primary")}} <br />
+</form>
+{%endblock%}
