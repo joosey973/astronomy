@@ -1,4 +1,4 @@
-from flask import Flask, render_template, redirect, url_for
+from flask import Flask, render_template, redirect, url_for, make_response
 from sign_in import SignIn
 from sign_up import SignUp
 from data.users import User
@@ -14,9 +14,12 @@ def astronomy_site():
     return render_template("main_page.html", title="astronomy-site", user=MAIN_USER)
 
 
-@app.route("/astronomu-site/profile")
+@app.route("/astronomy-site/profile")
 def profile():
-    pass
+    if MAIN_USER:
+        return render_template("profile.html", title="Profile", user=MAIN_USER)
+    else:
+        return redirect(url_for("astronomy_sign_in"))
 
 
 @app.route("/astronomy-site/astronomy_sign_in", methods=['GET', 'POST'])
@@ -53,7 +56,7 @@ def astronomy_sign_up():
         user.set_password(form.password.data)
         session.add(user)
         session.commit()
-        MAIN_USER = user
+        MAIN_USER = session.query(User).filter(User.username == form.username.data).first()
         return redirect(url_for("astronomy_site"))
     return render_template('sign_up.html', form=form, title='Sign up')
 
