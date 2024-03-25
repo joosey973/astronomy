@@ -16,7 +16,7 @@
   </head>
   <body>
     <header class="fixed-top mb-5 bg-dark">
-      <nav class="navbar navbar-expand-sm justify-content-start">
+      <nav class="navbar navbar-expand-sm justify-content-start" style="padding-right: 10vw;">
         <a href="" class="navbar-brand" style="font-size: 20px;">
           <img
             src="/static/images/logo.png"
@@ -32,12 +32,12 @@
             <a class="navbar-brand" href="/astronomy-site">Главная</a>
           </li>
           <li class="nav-item">
-            {%if not logged%}
-              <a class="navbar-brand" href="astronomy-site/astronomy_sign_in"
+            {%if user%}
+            <a class="navbar-brand" href="astronomy-site/profile"><img class="rounded-circle" src="/static/images/7015cb6c7ee53b8229d12cafaf43ddeb.png" alt=""></a>
+            {%else%}
+            <a class="navbar-brand" href="astronomy-site/astronomy_sign_in"
                 >Login</a
               >
-            {%else%}
-            <a class="navbar-brand" href="astronomy-site/profile"><p>{{user.name}}</p></a>
             {%endif%}
           </li>
         </ul>
