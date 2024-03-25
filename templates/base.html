@@ -17,7 +17,7 @@
   <body>
     <header class="fixed-top mb-5 bg-dark">
       <nav class="navbar navbar-expand-sm justify-content-start" style="padding-right: 10vw;">
-        <a href="" class="navbar-brand" style="font-size: 20px;">
+        <a href="/astronomy-site" class="navbar-brand" style="font-size: 20px;">
           <img
             src="/static/images/logo.png"
             alt=""
@@ -35,9 +35,11 @@
                 <span>{{user.username}} <img class="rounded-circle" src="/static/images/7015cb6c7ee53b8229d12cafaf43ddeb.png" alt=""></span>
               </a>
             
-              <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+              <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuLink">
                 <li><a class="dropdown-item" href="/astronomy-site/profile">About user</a></li>
                 <li><a class="dropdown-item" href="#"><a class="dropdown-item" href="/astronomy-site">Main page</a></li>
+                <li><a href="#" class="dropdown-item"><a class="dropdown-item" href="/astronomy-site/solar_hypotheses">Solar hypotheses</a></a></li>
+                <li><a href="#" class="dropdown-item"><a class="dropdown-item" href="/astronomy-site/logout">Logout</a></a></li>
               </ul>
             </div>
             {%else%}

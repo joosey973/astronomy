@@ -14,12 +14,27 @@ def astronomy_site():
     return render_template("main_page.html", title="astronomy-site", user=MAIN_USER)
 
 
+@app.route("/astronomy-site/solar_hypotheses")
+def solar_hypotheses():
+    if MAIN_USER:
+        return render_template("solar_hypotheses.html", user=MAIN_USER)
+    return redirect(url_for("astronomy_sign_in")) 
+
+
+@app.route("/astronomy-site/logout")
+def logout():
+    global MAIN_USER
+    if MAIN_USER:
+        MAIN_USER = None
+        return redirect(url_for("astronomy_site"))
+    return redirect(url_for("astronomy_sign_in"))
+
+
 @app.route("/astronomy-site/profile")
 def profile():
     if MAIN_USER:
         return render_template("profile.html", title="Profile", user=MAIN_USER)
-    else:
-        return redirect(url_for("astronomy_sign_in"))
+    return redirect(url_for("astronomy_sign_in"))
 
 
 @app.route("/astronomy-site/astronomy_sign_in", methods=['GET', 'POST'])
