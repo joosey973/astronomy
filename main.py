@@ -1,12 +1,17 @@
-from flask import Flask, render_template, redirect, url_for, make_response
-from sign_in import SignIn
-from sign_up import SignUp
+from flask import Flask, render_template, redirect, url_for
+from scripts.sign_in import SignIn
+from scripts.sign_up import SignUp
+from scripts.new_password import NewPassword
 from data.users import User
 from data.db_session import global_init, create_session
+from scripts.password_reset import PasswordReset
+from scripts.send_message_to_email import send_email
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'secret_key'
 MAIN_USER = None
+EMAIL = None
+ISSENDED = False
 
 
 @app.route("/astronomy-site")
@@ -14,11 +19,48 @@ def astronomy_site():
     return render_template("main_page.html", title="astronomy-site", user=MAIN_USER)
 
 
+@app.route("/astronomy-site/new_password", methods=["GET", "POST"])
+def new_password():
+    global ISSENDED, MAIN_USER
+    if not ISSENDED:
+        return redirect(url_for("astronomy_site"))
+    form = NewPassword()
+    if form.validate_on_submit():
+        if form.password.data == form.password_repeat.data:
+            global_init("db/astronomy_site_users.db")
+            session = create_session()
+            user = session.query(User).filter(User.email == EMAIL).first()
+            setattr(user, "password", user.set_password(form.password.data))
+            session.commit()
+            MAIN_USER = user
+            ISSENDED = False
+            return redirect(url_for("astronomy_site"))
+        return render_template("new_password.html", form=form, message="Passwords don't match", title="New password")
+    return render_template("new_password.html", form=form, title="New password")
+
+
+@app.route("/astronomy-site/password_reset", methods=["GET", "POST"])
+def password_reset():
+    global EMAIL, ISSENDED
+    form = PasswordReset()
+    if form.validate_on_submit():
+        global_init("db/astronomy_site_users.db")
+        session = create_session()
+        user = session.query(User).filter(User.email == form.email.data).first()
+        if user:
+            send_email(user.email)
+            ISSENDED = True
+            EMAIL = form.email.data
+            return render_template("message.html", title="Message")
+        return render_template("forgot.html", form=form, title="Reset password", message="There is no such mail")
+    return render_template("forgot.html", form=form, title="Reset password")
+
+
 @app.route("/astronomy-site/solar_hypotheses")
 def solar_hypotheses():
     if MAIN_USER:
         return render_template("solar_hypotheses.html", user=MAIN_USER)
-    return redirect(url_for("astronomy_sign_in")) 
+    return redirect(url_for("astronomy_sign_in"))
 
 
 @app.route("/astronomy-site/logout")
@@ -64,9 +106,11 @@ def astronomy_sign_up():
         global_init("db/astronomy_site_users.db")
         session = create_session()
         if session.query(User).filter(User.username == form.username.data).first():
-            return render_template("sign_up.html", form=form, message='This user have already registrared.', title='Sign up')
+            return render_template("sign_up.html", form=form, message='This user have already registrared.',
+                                   title='Sign up')
         user = User()
         user.username = form.username.data
+        user.email = form.email.data
         user.age = form.age.data
         user.set_password(form.password.data)
         session.add(user)
