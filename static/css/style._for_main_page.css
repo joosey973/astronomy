@@ -7,6 +7,7 @@ header{
     display: flex;
     justify-content: space-between;
     position: sticky;
+    padding-right: 40px;
 }
 header nav{
     max-width: 100%;
