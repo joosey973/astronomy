@@ -1,6 +1,18 @@
-{%extends "base.html"%}
-{%block content%}
-<div class="container", style="width: 60%;">
-    <img class="rounded-circle" src="" alt="">
+{%extends "base.html"%} {%block content%}
+<div class="container">
+  <h2>Edit Account</h2>
+  <img
+    class="rounded-circle"
+    src="{{user.profile_image}}"
+    alt=""
+    style="width: 40%; height: 40%"
+  />
+  <form action="" method="post" novalidate>
+    {{ form.hidden_tag() }} {%for field in form if field.name != 'csrf_token'
+    and field.name != 'submit'%} {{field.label}} <br />
+    {{field(class='form-control')}} <br />
+    {%endfor%} {{message}} <br />
+    {{form.submit(type="submit", class="btn btn-md btn-primary")}} <br />
+  </form>
 </div>
 {%endblock%}

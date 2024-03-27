@@ -32,7 +32,7 @@
             {%if user%}
             <div class="dropdown">
               <a class="btn btn-secondary dropdown-toggle bg-dark text-white" href="" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false" style="border: 0px;">
-                <span>{{user.username}} <img class="rounded-circle" src="/static/images/7015cb6c7ee53b8229d12cafaf43ddeb.png" alt=""></span>
+                <span>{{user.username}} <img class="rounded-circle" src={{user.profile_image}} alt="" style="max-width: 30px; max-height: 30px;"></span>
               </a>
             
               <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuLink">
@@ -51,6 +51,6 @@
         </ul>
       </nav>
     </header>
-    <main role="main" class="container mt-3">{%block content%}{%endblock%}</main>
+    <main role="main" class="container mt-5">{%block content%}{%endblock%}</main>
   </body>
 </html>

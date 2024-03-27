@@ -6,6 +6,7 @@ from data.users import User
 from data.db_session import global_init, create_session
 from scripts.password_reset import PasswordReset
 from scripts.send_message_to_email import send_email
+from editing_account import EditingAccount
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'secret_key'
@@ -75,7 +76,12 @@ def logout():
 @app.route("/astronomy-site/profile")
 def profile():
     if MAIN_USER:
-        return render_template("profile.html", title="Profile", user=MAIN_USER)
+        form = EditingAccount()
+        form.username.data = MAIN_USER.username
+        form.age.data = MAIN_USER.age
+        form.gender.data = MAIN_USER.gender
+        form.password.data = MAIN_USER.hashed_password
+        return render_template("profile.html", title="Profile", user=MAIN_USER, form=form)
     return redirect(url_for("astronomy_sign_in"))
 
 
@@ -113,6 +119,11 @@ def astronomy_sign_up():
         user.email = form.email.data
         user.age = form.age.data
         user.set_password(form.password.data)
+        user.gender = form.gender.data
+        if user.gender == "Female":
+            user.profile_image = "/static/images/woman.svg"
+        else:
+            user.profile_image = "/static/images/man.svg"
         session.add(user)
         session.commit()
         MAIN_USER = session.query(User).filter(User.username == form.username.data).first()

@@ -11,7 +11,9 @@ class User(SqlAlchemyBase):
     username = sqlalchemy.Column(
         sqlalchemy.Integer, unique=True, index=True, nullable=False)
     email = sqlalchemy.Column(sqlalchemy.String, unique=True, nullable=False)
+    profile_image = sqlalchemy.Column(sqlalchemy.String, nullable=False)
     age = sqlalchemy.Column(sqlalchemy.Integer)
+    gender = sqlalchemy.Column(sqlalchemy.String)
     hashed_password = sqlalchemy.Column(sqlalchemy.String)
     created_date = sqlalchemy.Column(
         sqlalchemy.DateTime, default=dt.datetime.now)
