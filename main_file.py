@@ -21,6 +21,13 @@ def astronomy_site():  # Основная страница сайта.
     return render_template("main_page.html", title="astronomy-site", user=MAIN_USER)
 
 
+@app.route("/astronomy-site/your_hypotheses")
+def your_hypotheses():
+    if MAIN_USER:
+        return render_template("your_hypotheses.html", user=MAIN_USER, title="Your hypotheses")
+    return redirect(url_for("astronomy_sign_in"))
+
+
 @app.route("/astronomy-site/new_password", methods=["GET", "POST"])
 def new_password():  # Функция установки нового пароля.
     global ISSENDED, MAIN_USER

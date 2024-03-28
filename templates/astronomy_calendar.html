@@ -2,13 +2,15 @@
 {%block content%}
 <div class="container" style="margin-left: 0; padding-left: 0;">
     <div class="container-fluid">
-        <p style="font-size: 30px;">Календарь<br>
+        <h2>Календарь<br>
             астроомических<br>
             событий в 2024 <br>
-            году.</p>
+            году.</h2>
+            <br>
         <div class="right-image">
             <img src="/static//images/galaxy.svg" alt="" style="max-width: 70%; max-height: 70%;">
         </div>
+        <br>
     </div>
     
     {%for key, value in events_dict.items()%}
