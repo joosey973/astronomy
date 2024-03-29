@@ -139,25 +139,24 @@ def revieve_message_page():
 @app.route("/astronomy-site/profile", methods=['POST', 'GET'])
 @login_required
 def profile():
-    form = EditingAccount()
-    form.username.data = current_user.username
-    form.age.data = current_user.age
-    form.gender.data = current_user.gender
-    form.email.data = current_user.email
-    if form.validate_on_submit():
+    print(current_user.age)
+    if request.method == 'POST':
         global_init("db/astronomy_site_users.db")
         db_session = create_session()
+        if request.form['email'] != current_user.email and db_session.query(User).filter(User.email == request.form['email']).first():
+            return render_template("profile.html", title="Profile", message="This email is already taken.", user=current_user)
         user = db_session.query(User).filter(User.username == current_user.username).first()
-        user.age = form.age.data
-        user.gender = form.gender.data
-        user.email = form.email.data
-        if user.gender == "Female":
-            user.profile_image = '/static/images/woman.svg'
+        user.age = request.form['age']
+        print("asas")
+        if request.form['gender'] == 'Female':
+            user.gender = '/static/images/woman.svg'
         else:
-            user.profile_image = '/static/images/man.svg'
+            user.gender = "/static/images/man.svg"
         db_session.commit()
-        return redirect(url_for("profile"))
-    return render_template("profile.html", title="Profile", form=form)
+        db_session.close()
+        # print(user.gender, request.form['gender'])
+        return redirect(url_for("astronomy_site"))
+    return render_template("profile.html", title="Profile", user=current_user)
 
 
 @app.route("/astronomy-site/reset_password/revieve_message/new_password", methods=['GET', 'POST'])

@@ -3,14 +3,25 @@
 <div class="container">
   <h2>Edit Account</h2>
   <img class="rounded-circle" src="{{current_user.profile_image}}" alt="" style="width: 40%; height: 40%" />
-  <form action="" method="post" novalidate>
-    {{ form.hidden_tag() }}
-    {%for field in form if field.name != 'csrf_token' and field.name != 'submit'%}
-    <p>{{field.label}}</p>
-    <p>{{field(class="form-control")}}</p>
-    {%endfor%}
-    <p>{{ form.submit(type="submit", class="btn btn-primary") }}</p>
+  <form action="" method="post">
+    <p><label for="username">Username</label></p>
+    <p><input class="form-control" id="username" name="username" required type="text" value={{user.username}} disabled></p>
+
+    <p><label for="age">Age</label></p>
+    <p><input class="form-control" id="age" name="age" required type="number" value={{user.age}}></p>
+
+    <p><label for="gender">Gender</label></p>
+    <p><select id="userSelect" class="form-control" id="gender" name="gender" required>
+        <option value="Male">Male</option>
+        <option value="Female">Female</option>
+      </select></p>
+
+    <p><label for="email">Email</label></p>
+    <p><input class="form-control" id="email" name="email" required type="email" value={{user.email}}></p>
+
+    <p>{{message}}</p>
+    <button class="btn btn-primary">Submit</button>
   </form>
 </div>
-
+<script></script>
 {%endblock%}
