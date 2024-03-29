@@ -9,7 +9,7 @@ def send_email(user_email):
     msg['From'] = sender_email
     msg['To'] = user_email
     msg['Subject'] = 'Astronomy'
-    body = 'Перейдите по ссылке, чтобы сменить пароль: <a href="http://127.0.0.1:8080/astronomy-site/new_password">Нажми здесь</a>'
+    body = 'Перейдите по ссылке, чтобы сменить пароль: <a href="http://192.168.0.104:5000/astronomy-site/reset_password/revieve_message/new_password">Нажми здесь</a>'
     msg.attach(MIMEText(body, 'html'))
     smtpObj = smtplib.SMTP('smtp.gmail.com', 587)
     smtpObj.starttls()

@@ -9,6 +9,5 @@ class SignUp(FlaskForm):
     email = EmailField("Email", validators=[DataRequired()])
     age = IntegerField('Age', validators=[DataRequired()])
     gender = SelectField("Gender", choices=["Male", "Female"], validators=[DataRequired()])
-    password = PasswordField('Password', validators=[DataRequired()])
     repeat_password = PasswordField('Repeat password', validators=[DataRequired()])
     submit = SubmitField('Submit')

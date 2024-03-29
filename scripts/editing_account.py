@@ -1,11 +1,11 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, IntegerField, SubmitField, SelectField, PasswordField
+from wtforms import StringField, IntegerField, SubmitField, SelectField, EmailField
 from wtforms.validators import DataRequired
 
 
 class EditingAccount(FlaskForm):
-    username = StringField("Username", validators=[DataRequired()])
+    username = StringField("Username", validators=[DataRequired()], render_kw={'disabled': True})
     age = IntegerField("Age", validators=[DataRequired()])
     gender = SelectField("Gender", choices=["Male", "Female"], validators=[DataRequired()])
-    password = PasswordField("Password", validators=[DataRequired()])
+    email = EmailField("Email", validators=[DataRequired()])
     submit = SubmitField("Submit")

@@ -1,4 +1,4 @@
-from flask import Flask, render_template, redirect, url_for, request, session
+from flask import Flask, render_template, redirect, url_for, request
 import datetime
 from scripts.sign_in import SignIn
 from scripts.sign_up import SignUp
@@ -14,11 +14,8 @@ from flask_login import LoginManager, login_user, logout_user, login_required, c
 app = Flask(__name__)
 login_manager = LoginManager()
 login_manager.init_app(app)
-# login_manager.login_view = "sign_in"
+login_manager.login_view = "sign_in"
 app.config['SECRET_KEY'] = 'secret_key'
-app.config['PERMANENT_SESSION_LIFETIME'] = datetime.timedelta(
-    days=365
-)
 EMAIL = None
 ISSENDED = False
 
@@ -54,10 +51,10 @@ def logout():  # Функция выхода из профиля.
 
 
 @app.route("/astronomy-site/sign_up", methods=['GET', 'POST'])
-def astronomy_sign_up():  # Функция регистрации пользователя.
+def sign_up():  # Функция регистрации пользователя.
     form = SignUp()
     if form.validate_on_submit():
-        if form.password.data != form.repeat_password.data:
+        if request.form['password'] != form.repeat_password.data:
             return render_template('sign_up.html', form=form, message="Passwords don't match.", title='Sign up')
         global_init("db/astronomy_site_users.db")
         db_session = create_session()
@@ -70,7 +67,7 @@ def astronomy_sign_up():  # Функция регистрации пользов
         user.username = form.username.data
         user.email = form.email.data
         user.age = form.age.data
-        user.set_password(form.password.data)
+        user.set_password(request.form['password'])
         user.gender = form.gender.data
         if user.gender == "Female":
             user.profile_image = "/static/images/woman.svg"
@@ -83,18 +80,13 @@ def astronomy_sign_up():  # Функция регистрации пользов
 
 
 @app.route("/")
+def main_function():
+    return redirect(url_for("astronomy_site"))
+
+
 @app.route("/astronomy-site")
 def astronomy_site():  # Основная страница сайта.
     return render_template("main_page.html", title="Astronomy-site")
-
-
-@app.route("/astronomy-site/profile")
-@login_required
-def profile():
-    form = EditingAccount()
-    if form.validate_on_submit():
-        pass
-    return render_template("profile.html", title="Profile", form=form)
 
 
 @app.route("/astronomy-site/stable_solar_hypotheses")
@@ -120,67 +112,76 @@ def astro_calendar():  # Функция с созданием страницы �
     return render_template("astronomy_calendar.html", title="Astronomical calendar", events_dict=events_dict)
 
 
-# @app.route("/astronomy-site/new_password", methods=["GET", "POST"])
-# def new_password():  # Функция установки нового пароля.
-#     global ISSENDED, MAIN_USER
-#     if not ISSENDED:
-#         return redirect(url_for("astronomy_site"))
-#     form = NewPassword()
-#     if form.validate_on_submit():
-#         if form.password.data == form.password_repeat.data:
-#             global_init("db/astronomy_site_users.db")
-#             session = create_session()
-#             user = session.query(User).filter(User.email == EMAIL).first()
-#             setattr(user, "password", user.set_password(form.password.data))
-#             session.commit()
-#             MAIN_USER = user
-#             ISSENDED = False
-#             return redirect(url_for("astronomy_site"))
-#         return render_template("new_password.html", form=form, message="Passwords don't match", title="New password")
-#     return render_template("new_password.html", form=form, title="New password")
+@app.route("/astronomy-site/password_reset", methods=['GET', 'POST'])
+def password_reset():
+    global ISSENDED, EMAIL
+    form = PasswordReset()
+    if form.validate_on_submit():
+        global_init("db/astronomy_site_users.db")
+        session = create_session()
+        user = session.query(User).filter(User.email == form.email.data).first()
+        if user:
+            send_email(user.email)
+            ISSENDED = True
+            EMAIL = user.email
+            return redirect(url_for("revieve_message_page"))
+        return render_template("forgot.html", form=form, title="Reset password", message="There is no such mail")
+    return render_template("forgot.html", form=form, title="Reset password")
 
 
-# @app.route("/astronomy-site/password_reset", methods=["GET", "POST"])
-# def password_reset():  # Функция сброса пароля
-#     global EMAIL, ISSENDED
-#     form = PasswordReset()
-#     if form.validate_on_submit():
-#         global_init("db/astronomy_site_users.db")
-#         session = create_session()
-#         user = session.query(User).filter(User.email == form.email.data).first()
-#         if user:
-#             send_email(user.email)
-#             ISSENDED = True
-#             EMAIL = form.email.data
-#             return render_template("message.html", title="Message")
-#         return render_template("forgot.html", form=form, title="Reset password", message="There is no such mail")
-#     return render_template("forgot.html", form=form, title="Reset password")
+@app.route("/astronomy-site/reset_password/revieve_message")
+def revieve_message_page():
+    if ISSENDED:
+        return render_template("message.html", title="Recieve Message")
+    return redirect(url_for("password_reset"))
 
 
-# @app.route("/astronomy-site/profile")
-# def profile():  # Функция изменения профиля.
-#     form = EditingAccount()
-#     form.username.data = MAIN_USER.username
-#     form.age.data = MAIN_USER.age
-#     form.gender.data = MAIN_USER.gender
-#     form.password.data = MAIN_USER.hashed_password
-#     return render_template("profile.html", title="Profile", user=MAIN_USER, form=form)
+@app.route("/astronomy-site/profile", methods=['POST', 'GET'])
+@login_required
+def profile():
+    form = EditingAccount()
+    form.username.data = current_user.username
+    form.age.data = current_user.age
+    form.gender.data = current_user.gender
+    form.email.data = current_user.email
+    if form.validate_on_submit():
+        global_init("db/astronomy_site_users.db")
+        db_session = create_session()
+        user = db_session.query(User).filter(User.username == current_user.username).first()
+        user.age = form.age.data
+        user.gender = form.gender.data
+        user.email = form.email.data
+        if user.gender == "Female":
+            user.profile_image = '/static/images/woman.svg'
+        else:
+            user.profile_image = '/static/images/man.svg'
+        db_session.commit()
+        return redirect(url_for("profile"))
+    return render_template("profile.html", title="Profile", form=form)
 
 
-# @app.route("/astronomy-site/astronomy_sign_in", methods=['GET', 'POST'])
-# def astronomy_sign_in():  # Функция захода в чуществующий аккаунт.
-#     global MAIN_USER
-#     form = SignIn()
-#     if form.validate_on_submit():
-#         global_init("db/astronomy_site_users.db")
-#         session = create_session()
-#         user = session.query(User).filter(
-#             User.username == form.username.data).first()
-#         if user and user.check_password(form.password.data):
-#             MAIN_USER = user
-#             return redirect(url_for('astronomy_site'))
-#         else:
-#             return render_template("sign_in.html", form=form, message='Incorrect password.', title='Sign in')
-#     return render_template('sign_in.html', form=form, title='Sign in')
+@app.route("/astronomy-site/reset_password/revieve_message/new_password", methods=['GET', 'POST'])
+def set_new_password():
+    global ISSENDED, EMAIL
+    if not ISSENDED:
+        return redirect(url_for("password_reset"))
+    form = NewPassword()
+    if form.validate_on_submit():
+        if form.password.data == form.password_repeat.data:
+            global_init("db/astronomy_site_users.db")
+            db_session = create_session()
+            user = db_session.query(User).filter(User.email == EMAIL).first()
+            if user.check_password(form.password.data):
+                return render_template("new_password.html", form=form, message="This password is already taken",
+                                       title="New password")
+            user.set_password(form.password.data)
+            db_session.commit()
+            ISSENDED = False
+            EMAIL = None
+            return redirect(url_for("sign_in"))
+        return render_template("new_password.html", form=form, message="Passwords don't match", title="New password")
+    return render_template("new_password.html", form=form, title="New password")
+
+
 if __name__ == "__main__":
     app.run(host="0.0.0.0")

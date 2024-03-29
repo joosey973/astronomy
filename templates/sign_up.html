@@ -1,16 +1,104 @@
 {%extends "sign_in_up_pattern.html"%} {%block content%}
+<link rel="stylesheet" href="/static/css/sign_up.css" />
 <h2>Sign up</h2>
 <form action="" method="post">
-  {{ form.hidden_tag() }} {%for field in form if field.name != 'csrf_token'
-    and field.name != 'submit'%} <p>{{field.label}}</p>
-    <p>{{field(class='form-control')}}</p>
-    {%endfor%}
-    <p>{{message}}</p>
-  <a
-      href="/astronomy-site/sign_inz"
-      style="text-decoration: none; color: grey"
-      >Sign in</a
-    >
+  {{ form.hidden_tag() }} {%for field in form if field.name != 'csrf_token' and
+  field.name != 'submit' and field.name != 'repeat_password'%}
+  <p>{{field.label}}</p>
+  <p>{{field(class='form-control')}}</p>
+  {%endfor%}
+  <div class="form-group">
+    <label for="password">Password</label>
+    <div class="input-group">
+      <input
+        type="password"
+        class="form-control"
+        id="password"
+        name="password"
+        oninput="validatePassword(this.value)"
+        required
+      />
+    </div>
+  </div>
+  <div class="form-group">
+    <ul>
+      <li id="minLength">
+        <i class="fas fa-times text-danger"></i> Minimum 8 characters
+      </li>
+      <li id="uppercase">
+        <i class="fas fa-times text-danger"></i> At least one uppercase letter
+      </li>
+      <li id="lowercase">
+        <i class="fas fa-times text-danger"></i> At least one lowercase letter
+      </li>
+      <li id="symbol">
+        <i class="fas fa-times text-danger"></i>
+        At least one symbol (_@$!%*?&)
+      </li>
+    </ul>
+  </div>
+  <p>{{form.repeat_password.label}}</p>
+  <p>{{form.repeat_password(class="form-control")}}</p>
+  <p>{{message}}</p>
+  <a href="/astronomy-site/sign_in" style="text-decoration: none; color: grey"
+    >Sign in</a
+  ><br /><br>
   <p>{{form.submit(type="submit", class="btn btn-md btn-primary")}}</p>
 </form>
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+<!-- Font Awesome -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/js/all.min.js"></script>
+
+<script>
+  // Function to toggle password visibility
+  document
+    .getElementById("togglePassword")
+    .addEventListener("click", function () {
+      const passwordInput = document.getElementById("password");
+      const icon = this.querySelector("i");
+
+      if (passwordInput.type === "password") {
+        passwordInput.type = "text";
+        icon.classList.remove("fa-eye");
+        icon.classList.add("fa-eye-slash");
+      } else {
+        passwordInput.type = "password";
+        icon.classList.remove("fa-eye-slash");
+        icon.classList.add("fa-eye");
+      }
+    });
+
+  function validatePassword(password) {
+    const strongPasswordRegex =
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d_@$!%*?&]{8,}$/;
+    const errorMessage = document.getElementById("errorMessage");
+
+    // Check each condition and update the corresponding label
+    document.getElementById("minLength").innerHTML =
+      password.length >= 8
+        ? '<i class="fas fa-check text-success"></i> Minimum 8 characters'
+        : '<i class="fas fa-times text-danger"></i> Minimum 8 characters';
+    document.getElementById("uppercase").innerHTML = /[A-Z]/.test(password)
+      ? '<i class="fas fa-check text-success"></i> At least one uppercase letter'
+      : '<i class="fas fa-times text-danger"></i> At least one uppercase letter';
+    document.getElementById("lowercase").innerHTML = /[a-z]/.test(password)
+      ? '<i class="fas fa-check text-success"></i> At least one lowercase letter'
+      : '<i class="fas fa-times text-danger"></i> At least one lowercase letter';
+    document.getElementById("symbol").innerHTML = /[_@$!%*?&]/.test(password)
+      ? '<i class="fas fa-check text-success"></i> At least one symbol (_@$!%*?&)'
+      : '<i class="fas fa-times text-danger"></i> At least one symbol (_@$!%*?&)';
+
+    // Check overall validity and update the error message
+    if (strongPasswordRegex.test(password)) {
+      errorMessage.textContent = "Strong Password";
+      errorMessage.classList.remove("text-danger");
+      errorMessage.classList.add("text-success");
+    } else {
+      errorMessage.textContent = "Weak Password";
+      errorMessage.classList.remove("text-success");
+      errorMessage.classList.add("text-danger");
+    }
+  }
+</script>
 {%endblock%}
