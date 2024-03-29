@@ -22,7 +22,7 @@ def astronomy_site():  # Основная страница сайта.
 
 
 @app.route("/astronomy-site/your_hypotheses")
-def your_hypotheses():
+def your_hypotheses():  # Страница с гипотезами пользователей
     if MAIN_USER:
         return render_template("your_hypotheses.html", user=MAIN_USER, title="Your hypotheses")
     return redirect(url_for("astronomy_sign_in"))
@@ -101,7 +101,8 @@ def astro_calendar():  # Функция с созданием страницы �
         events_dict = {}
         for info in session.query(Events).all():
             events_dict[info.date_of_event] = info.events.split(", ")
-        return render_template("astronomy_calendar.html", title="Astronomical calendar", events_dict=events_dict, user=MAIN_USER)
+        return render_template("astronomy_calendar.html", title="Astronomical calendar",
+                               events_dict=events_dict, user=MAIN_USER)
     return redirect(url_for("astronomy_sign_in"))
 
 
