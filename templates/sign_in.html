@@ -3,16 +3,18 @@
   <h2>Sign in</h2>
   <form action="" method="post">
     {{ form.hidden_tag() }} {%for field in form if field.name != 'csrf_token'
-    and field.name != 'submit'%} <p>{{field.label}}</p>
+    and field.name != 'submit' and field.name != 'remember_me'%} <p>{{field.label}}</p>
     <p>{{field(class='form-control')}}</p>
     {%endfor%}
+    <p>{{message}}</p>
+    <p>{{ form.remember_me() }} {{ form.remember_me.label }}</p>
     <a href="/astronomy-site/password_reset" style="text-decoration: none; color: grey">Forgot password?</a><br>
     <a
-      href="/astronomy-site/astronomy_sign_up"
+      href="/astronomy-site/sign_up"
       style="text-decoration: none; color: grey"
       >Sign up</a
     >
-    <p>{{message}}</p>
+    <br><br>
     <p>{{form.submit(type="submit", class="btn btn-md btn-primary")}}</p>
   </form>
 </div>

@@ -5,12 +5,12 @@
     and field.name != 'submit'%} <p>{{field.label}}</p>
     <p>{{field(class='form-control')}}</p>
     {%endfor%}
+    <p>{{message}}</p>
   <a
-      href="/astronomy-site/astronomy_sign_in"
+      href="/astronomy-site/sign_inz"
       style="text-decoration: none; color: grey"
       >Sign in</a
     >
-  <p>{{message}}</p>
   <p>{{form.submit(type="submit", class="btn btn-md btn-primary")}}</p>
 </form>
 {%endblock%}
