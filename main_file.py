@@ -40,8 +40,7 @@ def sign_in():
         if user and user.check_password(form.password.data):
             print(f"Запомнить меня: {form.remember_me.data}")
             login_user(user, remember=form.remember_me.data)
-            next = request.args.get('next')
-            return redirect(next or url_for("astronomy_site"))
+            return redirect(url_for("astronomy_site"))
         if user and not user.check_password(form.password.data):
             return render_template("sign_in.html", message="Incorrect username or password.", form=form)
     return render_template("sign_in.html", title="Sign in", form=form)
