@@ -4,6 +4,5 @@ from wtforms.validators import DataRequired
 
 
 class NewPassword(FlaskForm):
-    password = PasswordField("Enter password", validators=[DataRequired()])
-    password_repeat = PasswordField("Repeat password", validators=[DataRequired()])
+    repeat_password = PasswordField("Repeat password", validators=[DataRequired()])
     submit = SubmitField("Submit")

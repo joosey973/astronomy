@@ -1,5 +1,4 @@
 from flask import Flask, render_template, redirect, url_for, request
-import datetime
 from scripts.sign_in import SignIn
 from scripts.sign_up import SignUp
 from scripts.new_password import NewPassword
@@ -7,9 +6,9 @@ from data.users import User
 from data.db_session import global_init, create_session
 from scripts.password_reset import PasswordReset
 from scripts.send_message_to_email import send_email
-from scripts.editing_account import EditingAccount
 from data.events import Events
 from flask_login import LoginManager, login_user, logout_user, login_required, current_user
+from scripts.check_password import check_password
 
 app = Flask(__name__)
 login_manager = LoginManager()
@@ -56,13 +55,17 @@ def sign_up():  # Функция регистрации пользователя
     if form.validate_on_submit():
         if request.form['password'] != form.repeat_password.data:
             return render_template('sign_up.html', form=form, message="Passwords don't match.", title='Sign up')
+        if check_password(form.repeat_password.data):
+            return render_template('sign_up.html', form=form, message="Weak password.", title='Sign up')
+        if form.age.data < 14:
+            return render_template("sign_up.html", message='You are too young.', form=form, title='Sign up')
         global_init("db/astronomy_site_users.db")
         db_session = create_session()
         if db_session.query(User).filter(User.username == form.username.data).first():
             return render_template("sign_up.html", form=form, message='This user have already registrared.',
                                    title='Sign up')
         if db_session.query(User).filter(User.email == form.email.data).first():
-            return render_template("sign_up.html", form=form, message="This email is already used", title="Sign up")
+            return render_template("sign_up.html", form=form, message="This email is already used.", title="Sign up")
         user = User()
         user.username = form.username.data
         user.email = form.email.data
@@ -125,7 +128,7 @@ def password_reset():
             ISSENDED = True
             EMAIL = user.email
             return redirect(url_for("revieve_message_page"))
-        return render_template("forgot.html", form=form, title="Reset password", message="There is no such mail")
+        return render_template("forgot.html", form=form, title="Reset password", message="There is no such mail.")
     return render_template("forgot.html", form=form, title="Reset password")
 
 
@@ -139,22 +142,22 @@ def revieve_message_page():
 @app.route("/astronomy-site/profile", methods=['POST', 'GET'])
 @login_required
 def profile():
-    print(current_user.age)
     if request.method == 'POST':
         global_init("db/astronomy_site_users.db")
         db_session = create_session()
+        if request.form['age'] < 14:
+            return render_template("profile.html", message='You are too young.', title='Profile')
         if request.form['email'] != current_user.email and db_session.query(User).filter(User.email == request.form['email']).first():
             return render_template("profile.html", title="Profile", message="This email is already taken.", user=current_user)
         user = db_session.query(User).filter(User.username == current_user.username).first()
         user.age = request.form['age']
-        print("asas")
         if request.form['gender'] == 'Female':
             user.gender = '/static/images/woman.svg'
         else:
             user.gender = "/static/images/man.svg"
         db_session.commit()
         db_session.close()
-        # print(user.gender, request.form['gender'])
+        db_session = create_session()
         return redirect(url_for("astronomy_site"))
     return render_template("profile.html", title="Profile", user=current_user)
 
@@ -166,19 +169,22 @@ def set_new_password():
         return redirect(url_for("password_reset"))
     form = NewPassword()
     if form.validate_on_submit():
-        if form.password.data == form.password_repeat.data:
+        if request.form['password'] == form.password_repeat.data:
+            if check_password(form.password_repeat.data):
+                return render_template("new_password.html", form=form, message="Weak password.", title='New password')
             global_init("db/astronomy_site_users.db")
             db_session = create_session()
             user = db_session.query(User).filter(User.email == EMAIL).first()
             if user.check_password(form.password.data):
-                return render_template("new_password.html", form=form, message="This password is already taken",
+                return render_template("new_password.html", form=form, message="This password is already taken.",
                                        title="New password")
             user.set_password(form.password.data)
             db_session.commit()
+            db_session.close()
             ISSENDED = False
             EMAIL = None
             return redirect(url_for("sign_in"))
-        return render_template("new_password.html", form=form, message="Passwords don't match", title="New password")
+        return render_template("new_password.html", form=form, message="Passwords don't match.", title="New password")
     return render_template("new_password.html", form=form, title="New password")
 
 
