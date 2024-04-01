@@ -3,6 +3,5 @@ Flask-Login
 Flask-WTF
 WTForms
 SQLAlchemy
-email
 bs4
 requests
