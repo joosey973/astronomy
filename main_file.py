@@ -9,7 +9,7 @@ from scripts.send_message_to_email import send_email_with_reset, generate_code, 
 from data.events import Events
 from flask_login import LoginManager, login_user, logout_user, login_required, current_user
 from scripts.check_password import check_password
-from scripts.events_parser import get_data_from_web_site
+from events_parser import get_data_from_web_site
 
 app = Flask(__name__)
 login_manager = LoginManager()

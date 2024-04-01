@@ -3,3 +3,5 @@ flask_wtf
 wtforms
 sqlalchemy
 email
+bs4
+requests
