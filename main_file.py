@@ -20,7 +20,7 @@ EMAIL = None
 NEW_EMAIL = None
 CODE = None
 ISSENDED = False
-data_base_init("dbs/astronomy_site_users.db")
+data_base_init("db/astronomy_site_users.db")
 
 
 @login_manager.user_loader

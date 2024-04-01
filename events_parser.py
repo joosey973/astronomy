@@ -5,7 +5,7 @@ from data.events import Events
 
 
 def get_data_from_web_site():
-    data_base_init("dbs/astronomy_site_users.db")
+    data_base_init("db/astronomy_site_users.db")
     session = new_session()
     url = "https://starwalk.space/ru/news/astronomy-calendar-2024"
     response = requests.get(url)
@@ -22,4 +22,3 @@ def get_data_from_web_site():
         main_event.events = ", ".join(list(map(lambda event: event.title(), value)))
         session.add(main_event)
         session.commit()
-
