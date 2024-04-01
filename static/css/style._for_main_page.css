@@ -4,6 +4,7 @@ header{
     display: flex;
     justify-content: space-between;
     position: sticky;
+    padding-left: 4px;
 }
 header nav{
     max-width: 100%;

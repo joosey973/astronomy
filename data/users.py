@@ -1,18 +1,18 @@
 import sqlalchemy
 import datetime as dt
-from .db_session import SqlAlchemyBase
+from .data_base_session import SqlBase
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import UserMixin
 
 
-class User(SqlAlchemyBase, UserMixin):
+class User(SqlBase, UserMixin):
     __tablename__ = 'users'
     id = sqlalchemy.Column(
         sqlalchemy.Integer, primary_key=True, autoincrement=True)
     username = sqlalchemy.Column(
-        sqlalchemy.Integer, unique=True, index=True, nullable=False)
-    email = sqlalchemy.Column(sqlalchemy.String, unique=True, nullable=False)
-    profile_image = sqlalchemy.Column(sqlalchemy.String, nullable=False)
+        sqlalchemy.Integer, unique=True, index=True)
+    email = sqlalchemy.Column(sqlalchemy.String, unique=True)
+    profile_image = sqlalchemy.Column(sqlalchemy.String)
     age = sqlalchemy.Column(sqlalchemy.Integer)
     gender = sqlalchemy.Column(sqlalchemy.String)
     hashed_password = sqlalchemy.Column(sqlalchemy.String)

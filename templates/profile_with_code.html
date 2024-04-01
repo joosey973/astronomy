@@ -1,0 +1,31 @@
+{%extends "base.html"%} {%block content%}
+
+<div class="container">
+    <h2>Edit Account</h2>
+    <img class="rounded-circle" src="{{current_user.profile_image}}" alt="" style="width: 40%; height: 40%" />
+    <form action="" method="post">
+        <p><label for="username">Username</label></p>
+        <p><input class="form-control" id="username" name="username" required type="text"
+                value={{current_user.username}} disabled>
+        </p>
+
+        <p><label for="age">Age</label></p>
+        <p><input class="form-control" id="age" name="age" type="number" value={{current_user.age}} required></p>
+
+        <p><label for="gender">Gender</label></p>
+        <p><select id="userSelect" class="form-control" id="gender" name="gender" required>
+                <option value="Male">Male</option>
+                <option value="Female">Female</option>
+            </select></p>
+
+        <p><label for="confirm_code">Confirm code</label></p>
+        <p><input class="form-control" type="text" name="code" id="code"></p><br>
+        <p>If you haven't recived code:</p>
+        <p><button class="btn btn-dark">Send code again</button></p><br>
+
+        <p>{{message}}</p>
+        <button class="btn btn-primary">Submit</button>
+        <br> <br>
+    </form>
+</div>
+{%endblock%}

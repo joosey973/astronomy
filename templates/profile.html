@@ -5,10 +5,11 @@
   <img class="rounded-circle" src="{{current_user.profile_image}}" alt="" style="width: 40%; height: 40%" />
   <form action="" method="post">
     <p><label for="username">Username</label></p>
-    <p><input class="form-control" id="username" name="username" required type="text" value={{user.username}} disabled></p>
+    <p><input class="form-control" id="username" name="username" required type="text" value={{current_user.username}} disabled>
+    </p>
 
     <p><label for="age">Age</label></p>
-    <p><input class="form-control" id="age" name="age" required type="number" value={{user.age}}></p>
+    <p><input class="form-control" id="age" name="age" type="number" value={{current_user.age}} required></p>
 
     <p><label for="gender">Gender</label></p>
     <p><select id="userSelect" class="form-control" id="gender" name="gender" required>
@@ -17,11 +18,11 @@
       </select></p>
 
     <p><label for="email">Email</label></p>
-    <p><input class="form-control" id="email" name="email" required type="email" value={{user.email}}></p>
+    <p><input class="form-control" id="email" name="email" required type="email" value={{current_user.email}}></p>
 
     <p>{{message}}</p>
     <button class="btn btn-primary">Submit</button>
+    <br> <br>
   </form>
 </div>
-<script></script>
 {%endblock%}

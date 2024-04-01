@@ -2,11 +2,11 @@
 {%block content%}
 <div class="container" style="margin-left: 0; padding-left: 0;">
     <div class="container-fluid">
-        <h2>Календарь<br>
-            астроомических<br>
-            событий в 2024 <br>
-            году.</h2>
-            <br>
+        <h2>The calendar <br>
+            of astronomical <br>
+            events in <br>
+            2024</h2>
+        <br>
         <div class="right-image">
             <img src="/static//images/galaxy.svg" alt="" style="max-width: 70%; max-height: 70%;">
         </div>
@@ -15,11 +15,15 @@
 
     {%for key, value in events_dict.items()%}
     <ul>
-        <li><h3>{{key}}</h3></li>
+        <li>
+            <h3>{{key}}</h3>
+        </li>
         <ul>
-        {%for val in value%}
-        <li><h4>{{val}}</h4></li>
-        {%endfor%}
+            {%for val in value%}
+            <li>
+                <h4>{{val}}</h4>
+            </li>
+            {%endfor%}
         </ul>
     </ul>
     {%endfor%}

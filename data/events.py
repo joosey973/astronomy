@@ -1,8 +1,8 @@
 import sqlalchemy
-from .db_session import SqlAlchemyBase
+from .data_base_session import SqlBase
 
 
-class Events(SqlAlchemyBase):
+class Events(SqlBase):
     __tablename__ = "astronomical_events"
     id = sqlalchemy.Column(sqlalchemy.Integer, autoincrement=True, primary_key=True)
     date_of_event = sqlalchemy.Column(sqlalchemy.String)

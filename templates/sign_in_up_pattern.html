@@ -38,7 +38,6 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/js/all.min.js"></script>
 
   <script>
-    // Function to toggle password visibility
     document
       .getElementById("togglePassword")
       .addEventListener("click", function () {
@@ -76,7 +75,6 @@
         ? '<i class="fas fa-check text-success"></i> At least one symbol (_@$!%*?&)'
         : '<i class="fas fa-times text-danger"></i> At least one symbol (_@$!%*?&)';
 
-      // Check overall validity and update the error message
       if (strongPasswordRegex.test(password)) {
         errorMessage.textContent = "Strong Password";
         errorMessage.classList.remove("text-danger");
@@ -89,4 +87,5 @@
     }
   </script>
 </body>
+
 </html>

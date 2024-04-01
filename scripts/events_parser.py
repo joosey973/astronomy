@@ -1,12 +1,12 @@
 from bs4 import BeautifulSoup
 import requests
-from data.db_session import global_init, create_session
+from data.data_base_session import data_base_init, new_session
 from data.events import Events
 
 
 def get_data_from_web_site():
-    global_init("db/astronomy_site_users.db")
-    session = create_session()
+    data_base_init("dbs/astronomy_site_users.db")
+    session = new_session()
     url = "https://starwalk.space/ru/news/astronomy-calendar-2024"
     response = requests.get(url)
     soup = BeautifulSoup(response.text, "lxml")
@@ -23,5 +23,3 @@ def get_data_from_web_site():
         session.add(main_event)
         session.commit()
 
-
-get_data_from_web_site()
