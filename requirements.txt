@@ -1,7 +1,8 @@
-flask
-flask_wtf
-wtforms
-sqlalchemy
+Flask
+Flask-Login
+Flask-WTF
+WTForms
+SQLAlchemy
 email
 bs4
 requests
