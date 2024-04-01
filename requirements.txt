@@ -5,3 +5,5 @@ WTForms
 SQLAlchemy
 bs4
 requests
+urllib3
+Werkzeug
