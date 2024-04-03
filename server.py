@@ -11,6 +11,7 @@ from scripts.check_password import check_password
 from events_parser import get_data_from_web_site
 from scripts.records_form import RecordForm
 from data.records import Records
+import os
 
 app = Flask(__name__)
 login_manager = LoginManager()
@@ -21,7 +22,8 @@ EMAIL = None
 RESET_CODE = None
 NEW_EMAIL = None
 CODE = None
-data_base_init("./db/astronomy_site_users.db")
+if not os.path.isdir("db"):
+    os.mkdir("db")
 
 
 @login_manager.user_loader

@@ -2,10 +2,13 @@ from bs4 import BeautifulSoup
 import requests
 from data.data_base_session import data_base_init, new_session
 from data.events import Events
+import os
 
 
 def get_data_from_web_site():
-    data_base_init("../db/astronomy_site_users.db")
+    if not os.path.isdir("db"):
+        os.mkdir("db")
+    data_base_init("./db/astronomy_site_users.db")
     session = new_session()
     url = "https://starwalk.space/ru/news/astronomy-calendar-2024"
     response = requests.get(url)
