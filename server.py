@@ -8,10 +8,9 @@ from scripts.send_message_to_email import generate_code, send_email_with_switch_
 from data.events import Events
 from flask_login import LoginManager, login_user, logout_user, login_required, current_user
 from scripts.check_password import check_password
-from scripts.events_parser import get_data_from_web_site
+from events_parser import get_data_from_web_site
 from scripts.records_form import RecordForm
 from data.records import Records
-from waitress import serve
 
 app = Flask(__name__)
 login_manager = LoginManager()
@@ -22,7 +21,7 @@ EMAIL = None
 RESET_CODE = None
 NEW_EMAIL = None
 CODE = None
-data_base_init("db/astronomy_site_users.db")
+data_base_init("./db/astronomy_site_users.db")
 
 
 @login_manager.user_loader
@@ -338,4 +337,4 @@ def confirm_email_with_code():
 
 
 if __name__ == "__main__":
-    serve(app, host='0.0.0.0', port=5000)
+    app.run("0.0.0.0", port=5000)
