@@ -1,5 +1,9 @@
 {%extends "base.html"%} {%block content%}
-
+<style>
+    .btns input{
+        display: none;
+    }
+</style>
 <div class="container">
     <h2>Edit Account</h2>
     <img class="rounded-circle" src="{{current_user.profile_image}}" alt="" style="width: 40%; height: 40%" />
@@ -9,6 +13,11 @@
                 value={{current_user.username}} disabled>
         </p>
 
+        <p><label for="date">Account creation date</label></p>
+        <p><input class="form-control" id="date" name="date" type="datetime" value={{current_user.created_date}}
+                disabled>
+        </p>
+
         <p><label for="age">Age</label></p>
         <p><input class="form-control" id="age" name="age" type="number" value={{current_user.age}} required></p>
 
@@ -16,16 +25,26 @@
         <p><select id="userSelect" class="form-control" id="gender" name="gender" required>
                 <option value="Male">Male</option>
                 <option value="Female">Female</option>
-            </select></p>
-
-        <p><label for="confirm_code">Confirm code</label></p>
-        <p><input class="form-control" type="text" name="code" id="code"></p><br>
-        <p>If you haven't recived code:</p>
-        <p><button class="btn btn-dark">Send code again</button></p><br>
-
-        <p>{{message}}</p>
-        <button class="btn btn-primary">Submit</button>
+            </select></p> <br>
+            <p><label for="code">Code</label></p>
+            <p><input type="text" name="code" id="code" class="form-control" style="max-width: 20vw;"></p><br>
+            <div class="btns">
+                <input type="text" name="email_send" value="1">
+                <p><label for="new_code">If you haven't received the code:</label></p>
+                <p><button class="btn btn-dark" onclick="func1()" type="submit" name="new_code" id="new_code">Send again</button></p><br><br>
+                <input type="text" name="send_data" value="1">
+                <p>{{message}}</p>
+                <p><button class="btn btn-primary" onclick="func2()" type="submit">Submit</button></p>
+            </div>
         <br> <br>
     </form>
+    <script>
+        function func1(){
+            document.querySelector('[name="send_data"]').value = "";
+        }
+        function func2(){
+            document.querySelector('[name="email_send"]').value = "";
+        }
+    </script>
 </div>
 {%endblock%}

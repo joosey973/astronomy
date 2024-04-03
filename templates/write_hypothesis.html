@@ -1,0 +1,19 @@
+{%extends "base.html"%}
+{%block content%}
+<style>
+  /* input[type='file'] {
+    display: none;
+  } */
+</style>
+<div class="container" style="max-width: 40vw; margin-right: 40%;">
+    <h2>Write your own record</h2>
+    <form method="post" enctype="multipart/form-data">
+        {{form.hidden_tag()}}
+        {%for field in form if field.name != 'csrf_token' and field.name != 'submit'%}
+        <p>{{field.label}}</p>
+        <p>{{field(class='form-control')}}</p>
+        {%endfor%}
+      <p>{{form.submit(class='btn btn-primary btn-md', type='submit')}}</p>
+      </form>
+</div>
+{%endblock%}

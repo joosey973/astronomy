@@ -1,0 +1,35 @@
+{%extends "base.html"%} {%block content%}
+<div class="container">
+    {%if current_user.username != user.username%}
+    <h2>{{user.username}}'s profile</h2>
+    {%else%}
+    <h2>Your profile</h2>
+    {%endif%}
+    <img class="rounded-circle" src="{{user.profile_image}}" alt="" style="width: 50%; height: 50%" />
+    <br><br>
+    <p><label for="username">Username</label></p>
+    <p><input class="form-control" id="username" name="username" disabled type="text" value={{user.username}} disabled>
+    </p>
+
+    <p><label for="date">Account creation date</label></p>
+    <p><input class="form-control" id="date" name="date" type="datetime" value={{user.created_date}} disabled>
+    </p>
+
+    <p><label for="age">Age</label></p>
+    <p><input class="form-control" id="age" name="age" type="number" value={{user.age}} disabled></p>
+    <p><label for="gender">Gender</label></p>
+    <p><select id="userSelect" class="form-control" id="gender" name="gender" disabled>
+            {%if user.gender == "Male"%}
+            <option value="Male" selected>Male</option>
+            <option value="Female">Female</option>
+            {%else%}
+            <option value="Male">Male</option>
+            <option value="Female" selected>Female</option>
+            {%endif%}
+        </select></p>
+
+    <p><label for="email">Email</label></p>
+    <p><input class="form-control" id="email" name="email" disabled type="email" value={{user.email}}></p>
+    <br> <br>
+</div>
+{%endblock%}

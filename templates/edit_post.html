@@ -1,0 +1,13 @@
+{%extends "base.html"%}
+{%block content%}
+<div class="container">
+    <h2>Edit post with {{post_id}} id</h2>
+    <form method="post">
+        <p><label for="title">Title</label></p>
+        <p><input type="text" class="form-control" value={{post.title}} name="title" id="title" required></p><br>
+        <label for="content">Content</label>
+        <p><textarea name="content" id="content" class="form-control" required>{{post.content}}</textarea></p> <br>
+        <p><button class="btn btn-primary">Submit</button></p><br>
+    </form>
+</div>
+{%endblock%}

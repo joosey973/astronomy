@@ -1,0 +1,15 @@
+{%extends "base.html"%}
+{%block content%}
+<div class="container">
+    <h2>Complaint about a post with an id {{post_id}}</h2><br><br>
+    <form action="" method="post">
+        <p><label for="reason">Write the reason of complaint</label></p>
+        <p><input class="form-control" type="text" name="reason" id="reason" required></p>
+        <p><label for="describe">
+            Describe the problem
+        </label></p>
+        <p><textarea name="describe" id="describe" class="form-control" required></textarea></p>
+        <button class="btn btn-primary" type="submit">Submit</button>
+    </form>
+</div>
+{%endblock%}
