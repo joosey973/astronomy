@@ -11,6 +11,7 @@ from scripts.check_password import check_password
 from scripts.events_parser import get_data_from_web_site
 from scripts.records_form import RecordForm
 from data.records import Records
+from waitress import serve
 
 app = Flask(__name__)
 login_manager = LoginManager()
@@ -282,52 +283,6 @@ def new_password():
     return render_template("new_password.html", title='New password', form=form)
 
 
-# @app.route("/astronomy-site/password_reset", methods=['GET', 'POST'])
-# def password_reset():
-#     global ISSENDED, EMAIL
-    # form = PasswordReset()
-#     if form.validate_on_submit():
-#         session = new_session()
-#         user = session.query(User).filter(User.email == form.email.data).first()
-#         if user:
-#             send_email_with_reset(user.email)
-#             ISSENDED = True
-#             EMAIL = user.email
-#             return redirect(url_for("revieve_message_page"))
-#         return render_template("forgot.html", form=form, title="Reset password", message="There is no such mail.")
-#     return render_template("forgot.html", form=form, title="Reset password")
-
-
-# @app.route("/astronomy-site/reset_password/revieve_message")
-# def revieve_message_page():
-#     if ISSENDED:
-#         return render_template("message.html", title="Recieve Message")
-#     return redirect(url_for("password_reset"))
-# @ app.route("/astronomy-site/reset_password/revieve_message/new_password", methods=['GET', 'POST'])
-# def set_new_password():
-#     global ISSENDED, EMAIL
-#     if not ISSENDED:
-#         return redirect(url_for("password_reset"))
-#     form = NewPassword()
-#     if form.validate_on_submit():
-#         if request.form['password'] == form.password_repeat.data:
-#             if check_password(form.password_repeat.data):
-#                 return render_template("new_password.html", form=form, message="Weak password.", title='New password')
-#             data_base_session = new_session()
-#             user = data_base_session.query(User).filter(User.email == EMAIL).first()
-#             if user.check_password(form.password.data):
-#                 return render_template("new_password.html", form=form, message="This password is already taken.",
-#                                        title="New password")
-#             user.set_password(form.password.data)
-#             data_base_session.commit()
-#             data_base_session.close()
-#             ISSENDED = False
-#             EMAIL = None
-#             return redirect(url_for("sign_in"))
-#         return render_template("new_password.html", form=form, message="Passwords don't match.", title="New password")
-#     return render_template("new_password.html", form=form, title="New password")
-
-
 @app.route("/astronomy-site/profile", methods=['POST', 'GET'])
 @login_required
 def profile():
@@ -383,4 +338,4 @@ def confirm_email_with_code():
 
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0")
+    serve(app, host='0.0.0.0', port=5000)
