@@ -24,6 +24,7 @@ NEW_EMAIL = None
 CODE = None
 if not os.path.isdir("db"):
     os.mkdir("db")
+data_base_init("./db/astronomy_site_users.db")
 
 
 @login_manager.user_loader
