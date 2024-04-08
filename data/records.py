@@ -1,10 +1,10 @@
 import sqlalchemy
-from .data_base_session import SqlBase
+from .data_base_session import Base
 import datetime as dt
 from sqlalchemy import orm
 
 
-class Records(SqlBase):
+class Records(Base):
     __tablename__ = "records"
     id = sqlalchemy.Column(sqlalchemy.Integer, primary_key=True, autoincrement=True)
     title = sqlalchemy.Column(sqlalchemy.String)
