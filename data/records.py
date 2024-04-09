@@ -1,15 +1,21 @@
 import sqlalchemy
-from .data_base_session import Base
+from .data_base_session import SqlBase
 import datetime as dt
 from sqlalchemy import orm
 
 
-class Records(Base):
+class Records(SqlBase):
     __tablename__ = "records"
     id = sqlalchemy.Column(sqlalchemy.Integer, primary_key=True, autoincrement=True)
-    title = sqlalchemy.Column(sqlalchemy.String)
-    content = sqlalchemy.Column(sqlalchemy.String)
+
+    title = sqlalchemy.Column(sqlalchemy.String, nullable=False)
+    content = sqlalchemy.Column(sqlalchemy.String, nullable=False)
     created_date = sqlalchemy.Column(sqlalchemy.DateTime, default=dt.datetime.now)
-    count_of_claims = sqlalchemy.Column(sqlalchemy.Integer, default=0)
+    post_url = sqlalchemy.Column(sqlalchemy.String, nullable=False)
+
+    count_of_likes = sqlalchemy.Column(sqlalchemy.Integer, default=0, nullable=False)
+    count_of_claims = sqlalchemy.Column(sqlalchemy.Integer, default=0, nullable=False)
+    count_of_views = sqlalchemy.Column(sqlalchemy.Integer, default=0, nullable=False)
+
     user_id = sqlalchemy.Column(sqlalchemy.Integer, sqlalchemy.ForeignKey("users.id"))
     user = orm.relationship("User")
