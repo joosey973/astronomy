@@ -135,53 +135,27 @@ def show_record(record_id):
     if record_id != POST_ID:
         POST_ID = record_id
     form = CommentForm()
-    if request.method == 'POST':
+    if form.validate_on_submit:
+        data_base_session = new_session()
+        comment = Comments()
+        comment.content = form.body.data
+        length = len(data_base_session.query(Comments).all()) + 1
+        comment.delete = f'astronomy-site/your_hypotheses/delete_post/{length}'
+        comment.edit = f'astronomy-site/your_hypotheses/edit_post/{length}'
+        comment.claim = f'/astronomy-site/your_hypotheses/claim/{length}'
+        # comment.delete
+        record = data_base_session.query(Records).filter(Records.id == record_id).first()
         try:
-            if request.form['post_id']:
-                return redirect(url_for("claim_to_the_post", post_id=request.form['post_id']))
+            user = data_base_session.query(User).filter(User.id == record.user_id).first()
         except Exception:
-            try:
-                if int(request.form['write_comment']) == POST_ID:
-                    data_base_session = new_session()
-                    comment = Comments()
-                    comment.comment_content = request.form['body']
-                    comment.commenter_username = current_user.username
-                    comment.post_id = POST_ID
-                    data_base_session.add(comment)
-                    data_base_session.commit()
-                    return redirect(f"/astronomy-site/your_hypotheses/{POST_ID}")
-                elif int(request.form['isedit']) == POST_ID:
-                    if int(request.form['isdelete']) < 0:
-                        return '<meta http-equiv="refresh" content="5">'
-                    return redirect(url_for("delete_post", post_id=request.form['isdelete']))
-                elif int(request.form['isedit']) == POST_ID:
-                    return redirect(url_for("edit_post", post_id=request.form['isedit']))
-                elif int(request.form['edit_comment']) == POST_ID:
-                    return redirect(url_for("edit_comment", post_id=POST_ID))
-                elif int(request.form['delete_comment']) == POST_ID:
-                    return redirect(url_for("delete_comment", post_id=POST_ID))
-            except Exception:
-                if int(request.form['isedit']) == POST_ID:
-                    return redirect(url_for("edit_post", post_id=request.form['isedit']))
-                elif int(request.form['isdelete']) == POST_ID:
-                    return redirect(url_for("delete_post", post_id=request.form['isdelete']))
-                elif int(request.form['edit_comment']) == POST_ID:
-                    return redirect(url_for("edit_comment", post_id=POST_ID))
-                elif int(request.form['delete_comment']) == POST_ID:
-                    return redirect(url_for("delete_comment", post_id=POST_ID))
-    data_base_session = new_session()
-    record = data_base_session.query(Records).filter(Records.id == record_id).first()
-    try:
-        user = data_base_session.query(User).filter(User.id == record.user_id).first()
-    except Exception:
-        return render_template("no_such_record.html", title=f'Post {record_id}')
-    post = data_base_session.query(Records).filter(Records.id == record_id).first()
-    user = data_base_session.query(User).filter(User.id == post.user_id).first()
-    comments = sorted(data_base_session.query(Comments).all(), key=lambda x: x.created_date)[::-1]
-    comments_dict = dict()
-    for commentary in comments:
-        comments_dict[commentary] = data_base_session.query(User).filter(User.username ==
-                                                                         commentary.commenter_username).first()
+            return render_template("no_such_record.html", title=f'Post {record_id}')
+        post = data_base_session.query(Records).filter(Records.id == record_id).first()
+        user = data_base_session.query(User).filter(User.id == post.user_id).first()
+        comments = sorted(data_base_session.query(Comments).all(), key=lambda x: x.created_date)[::-1]
+        comments_dict = dict()
+        for commentary in comments:
+            comments_dict[commentary] = data_base_session.query(User).filter(User.username ==
+                                                                            commentary.commenter_username).first()
     return render_template("your_hypotheses.html", title=f"Post {record_id}",
                            user=user, post=record, form=form, comments_dict=comments_dict)
 
@@ -272,7 +246,11 @@ def write_hypothesis():
         record = Records()
         record.title = form.title.data
         record.content = form.content.data
-        record.post_url = f'/astronomy-site/your_hypotheses/{len(data_base_session.query(Records).all()) + 1}'
+        length = len(data_base_session.query(Records).all()) + 1
+        record.post_url = f'/astronomy-site/your_hypotheses/{length}'
+        record.delete = f'astronomy-site/your_hypotheses/delete_post/{length}'
+        record.edit = f'astronomy-site/your_hypotheses/edit_post/{length}'
+        record.claim = f'/astronomy-site/your_hypotheses/claim/{length}'
         current_user.records.append(record)
         data_base_session.merge(current_user)
         data_base_session.commit()

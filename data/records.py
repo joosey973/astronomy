@@ -12,6 +12,9 @@ class Records(SqlBase):
     content = sqlalchemy.Column(sqlalchemy.String, nullable=False)
     created_date = sqlalchemy.Column(sqlalchemy.DateTime, default=dt.datetime.now)
     post_url = sqlalchemy.Column(sqlalchemy.String, nullable=False)
+    edit = sqlalchemy.Column(sqlalchemy.String, nullable=False)
+    delete = sqlalchemy.Column(sqlalchemy.String, nullable=False)
+    claim = sqlalchemy.Column(sqlalchemy.String, nullable=False)
 
     count_of_likes = sqlalchemy.Column(sqlalchemy.Integer, default=0, nullable=False)
     count_of_claims = sqlalchemy.Column(sqlalchemy.Integer, default=0, nullable=False)

@@ -10,5 +10,8 @@ class Comments(SqlBase):
     comment_content = sqlalchemy.Column(sqlalchemy.String)
     created_date = sqlalchemy.Column(sqlalchemy.DateTime, default=dt.datetime.now)
     count_of_likes = sqlalchemy.Column(sqlalchemy.Integer, default=0)
+    edit = sqlalchemy.Column(sqlalchemy.Integer)
+    delete = sqlalchemy.Column(sqlalchemy.Integer)
+    claim = sqlalchemy.Column(sqlalchemy.Integer)
     post_id = sqlalchemy.Column(sqlalchemy.Integer)
     commenter_username = sqlalchemy.Column(sqlalchemy.String)

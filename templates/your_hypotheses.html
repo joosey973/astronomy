@@ -96,18 +96,16 @@
           <div class="button_container" style="display: flex; justify-content: space-between; flex-wrap: wrap;">
             <a class="btn btn-md" style="background-color: darkslateblue;" data-bs-toggle="collapse"
               data-bs-target="#demo3">Comments</a>
-            <input type="number" name="post_id" id="post" value={{post.id}} required>
-            <button class="btn btn-md btn-danger" type="submit">Claim</button>
+            <a href="" class="btn btn-md btn-danger" type="submit">Claim</a>
           </div>
           {%else%}
           <div class="button_container" style="display: flex; justify-content: space-between;flex-wrap: wrap;">
-              <input type="number" name="isedit" id="isedit" value={{post.id}} required>
-              <button class="btn btn-md" onclick="Btn1()" style="background-color: rgb(235, 99, 50); color: white;"
-                type="submit">Edit</button>
-              <a class="btn btn-md" onclick="Btn3()" style="background-color: darkslateblue;" data-bs-toggle="collapse"
+              <a class="btn btn-md" href={{post.edit}} style="background-color: rgb(235, 99, 50); color: white;"
+                type="submit">Edit</a>
+              <a class="btn btn-md" style="background-color: darkslateblue;" data-bs-toggle="collapse"
                 data-bs-target="#demo3">Comments</a>
             <input type="number" name="isdelete" id="isdelete" value={{post.id}} required>
-            <button class="btn btn-danger btn-md text-white" onclick="Btn2()" type="submit">Delete</button>
+            <a class="btn btn-danger btn-md text-white" href={{post.delete}}>Delete</a>
           </div>
           {%endif%}
         </form>
@@ -153,17 +151,13 @@
                 <br><br>
                 {%if post.user_id != current_user.id%}
                 <div class="button_container" style="display: flex; justify-content: space-between; flex-wrap: wrap;">
-                  <input type="number" name="post_id" id="post" value={{post.id}} required>
                   <p></p>
-                  <button class="btn btn-md btn-danger" type="submit">Claim</button>
+                  <a class="btn btn-md btn-danger" href={{comment.claim}}>Claim</a>
                 </div>
                 {%else%}
                 <div class="button_container" style="display: flex; justify-content: space-between;flex-wrap: wrap;">
-                  <input type="number" name="edit_comment" id="edit_comment" value={{post.id}} required>
-                  <button class="btn btn-md" onclick="Btn4()" style="background-color: rgb(235, 99, 50); color: white;"
-                    type="submit">Edit</button>
-                  <input type="number" name="delete_comment" id="delete_comment" value={{post.id}} required>
-                  <button class="btn btn-danger btn-md text-white" onclick="Btn5()" type="submit">Delete</button>
+                  <a href={{comment.edit}} class="btn btn-md" style="background-color: rgb(235, 99, 50); color: white;">Edit</a>
+                  <a class="btn btn-danger btn-md text-white" href={{comment.delete}}>Delete</a>
                 </div>
                 {%endif%}
                 <br>
@@ -174,27 +168,6 @@
           <br>
         </div>
       </div>
-
-      <script>
-        function Btn1() {
-          document.querySelector('[name="isdelete"]').value = "-1";
-          document.querySelector('[name="write_comment"]').value = "-1";
-          document.querySelector('[name="edit_comment"]').value = "-1";
-          document.querySelector('[name="delete_comment"]').value = "-1";
-        }
-        function Btn2() {
-          document.querySelector('[name="isedit"]').value = "-1";
-          document.querySelector('[name="write_comment"]').value = "-1";
-          document.querySelector('[name="edit_comment"]').value = "-1";
-          document.querySelector('[name="delete_comment"]').value = "-1";
-        }
-        function Btn3() {
-          document.querySelector('[name="isedit"]').value = "-1";
-          document.querySelector('[name="isdelete"]').value = "-1";
-          document.querySelector('[name="edit_comment"]').value = "-1";
-          document.querySelector('[name="delete_comment"]').value = "-1";
-        }
-      </script>
 
     </div>
   </main>
