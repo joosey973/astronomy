@@ -20,42 +20,59 @@
     <div class="container-1" style="flex-wrap: wrap;">
       <div class="first-nav">
         <a href="/astronomy-site">
-        <nav>
+          <nav>
             <img src="/static/images/logo.png" alt="" />
             <p>Astronomy</p>
 
-        </nav>
-      </a>
+          </nav>
+        </a>
 
       </div>
-      <div class="second-nav">
-        {%if current_user.is_authenticated%}
-        <div class="dropdown dropstart text-end" style="max-width: 30%;">
+      <div class="second-nav bg-dark">
+        <div class="dropdown dropstart text-end position" style="max-width: 30%;">
           <button type="button" class="btn btn-dark dropdown-toggle bg-dark text-white" data-bs-toggle="dropdown">
+            {%if current_user.is_authenticated%}
             <span style="font-size: 20px; ">{{current_user.username}} <img class="rounded-circle"
                 src={{current_user.profile_image}} alt="" style="width: 50px; height: 50px;"></span>
+            {%else%}
+            <span style="font-size: 20px; "><img class="rounded-circle" src="/static/images/anonym.svg" alt=""
+                style="width: 50px; height: 50px;"></span>
+            {%endif%}
+
           </button>
           <ul class="dropdown-menu">
+            {%if current_user.is_authenticated%}
             <li><a class="dropdown-item" href="/astronomy-site/profile">About user</a></li>
-            <li><a class="dropdown-item" href="/astronomy-site">Main page</a></li>
+            {%endif%}
             <li><a class="dropdown-item" href="/astronomy-site/established_solar_hypotheses">Well-established
                 hypotheses of
                 the formation of the Solar system </a>
             </li>
+            <li><a class="dropdown-item" href="/astronomy-site/Kant-Laplace">The Kant-Laplace hypothesis</a></li>
+            <li><a class="dropdown-item" href="/astronomy-site/James-Jeans">The James Jeans hypothesis</a></li>
+            <li><a class="dropdown-item" href="/astronomy-site/Modern-hypothesis">The modern hypothesis</a></li>
             <li><a class="dropdown-item" href="/astronomy-site/your_hypotheses">Your hypotheses of formation of
                 the Solar system</a></li>
+            {%if current_user.is_authenticated%}
             <li><a class="dropdown-item" href="/astronomy-site/astronomical-calendar">Astronomical calendar</a>
             </li>
+            {%endif%}
             <li>
               <hr class="dropdown-divider">
               </hr>
             </li>
+            {%if not current_user.is_authenticated%}
+            <li>
+              <a class="dropdown-item" href="/astronomy-site/sign_in">Sign in</a>
+            </li>
+            <li>
+              <a class="dropdown-item" href="/astronomy-site/sign_up">Sign up</a>
+            </li>
+            {%else%}
             <li><a class="dropdown-item" href="/astronomy-site/logout">Logout</a></li>
+            {%endif%}
           </ul>
         </div>
-        {%else%}
-        <p><a class="navbar-brand" href="/astronomy-site/sign_in">Sign in</a></p>
-        {%endif%}
 
       </div>
     </div>

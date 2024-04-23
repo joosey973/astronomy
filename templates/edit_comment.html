@@ -1,0 +1,11 @@
+{%extends "base.html"%}
+{%block content%}
+<div class="container">
+    <h2>Edit post with {{post_id}} id</h2>
+    <form method="post">
+        <label for="content">Content</label>
+        <p><textarea name="comment_content" id="content" class="form-control" required>{{comment.comment_content}}</textarea></p> <br>
+        <p><button class="btn btn-primary">Submit</button></p><br>
+    </form>
+</div>
+{%endblock%}

@@ -134,28 +134,27 @@ def show_record(record_id):
     global POST_ID
     if record_id != POST_ID:
         POST_ID = record_id
+    data_base_session = new_session()
     form = CommentForm()
-    if form.validate_on_submit:
-        data_base_session = new_session()
+    if form.validate_on_submit():
+        if data_base_session.query(Comments).filter(Comments.comment_content == form.body.data).first():
+            return render_template("your_hypotheses.html", form=form, message='There is already such a comment!')
         comment = Comments()
-        comment.content = form.body.data
+        comment.comment_content = form.body.data
+        comment.commenter_username = current_user.username
+        comment.post_id = record_id
         length = len(data_base_session.query(Comments).all()) + 1
-        comment.delete = f'astronomy-site/your_hypotheses/delete_post/{length}'
-        comment.edit = f'astronomy-site/your_hypotheses/edit_post/{length}'
-        comment.claim = f'/astronomy-site/your_hypotheses/claim/{length}'
-        # comment.delete
-        record = data_base_session.query(Records).filter(Records.id == record_id).first()
-        try:
-            user = data_base_session.query(User).filter(User.id == record.user_id).first()
-        except Exception:
-            return render_template("no_such_record.html", title=f'Post {record_id}')
-        post = data_base_session.query(Records).filter(Records.id == record_id).first()
-        user = data_base_session.query(User).filter(User.id == post.user_id).first()
-        comments = sorted(data_base_session.query(Comments).all(), key=lambda x: x.created_date)[::-1]
-        comments_dict = dict()
-        for commentary in comments:
-            comments_dict[commentary] = data_base_session.query(User).filter(User.username ==
-                                                                            commentary.commenter_username).first()
+        comment.delete = f'/astronomy-site/your_hypotheses/delete_comment/{length}'
+        comment.edit = f'/astronomy-site/your_hypotheses/edit_comment/{length}'
+        data_base_session.add(comment)
+        data_base_session.commit()
+    record = data_base_session.query(Records).filter(Records.id == POST_ID).first()
+    user = data_base_session.query(User).filter(User.id == record.user_id).first()
+    comments = sorted(data_base_session.query(Comments).all(), key=lambda x: x.created_date)[::-1]
+    comments_dict = dict()
+    for commentary in comments:
+        comments_dict[commentary] = data_base_session.query(User).filter(User.username ==
+                                                                         commentary.commenter_username).first()
     return render_template("your_hypotheses.html", title=f"Post {record_id}",
                            user=user, post=record, form=form, comments_dict=comments_dict)
 
@@ -175,10 +174,21 @@ def delete_comment(comment_id):
     return redirect(url_for("your_hypotheses"))
 
 
-@app.route("/astronomy-site/your_hypotheses/edit_comment/<int:record_id>")
+@app.route("/astronomy-site/your_hypotheses/edit_comment/<int:comment_id>", methods=['GET', 'POST'])
 @login_required
-def edit_comment(record_id):
-    pass
+def edit_comment(comment_id):
+    data_base_session = new_session()
+    try:
+        if data_base_session.query(Comments).filter(Comments.id == comment_id).first().commenter_username != data_base_session.query(User).filter(User.username == current_user.username).first().username:
+            return render_template(url_for("your_hypotheses"))
+    except Exception:
+        return redirect(url_for("your_hypotheses"))
+    comment = data_base_session.query(Comments).filter(Comments.id == comment_id).first()
+    if request.method == 'POST':
+        comment.comment_content = request.form['comment_content']
+        data_base_session.commit()
+        return redirect(url_for("your_hypotheses"))
+    return render_template("edit_comment.html", comment=comment)
 
 
 @app.route("/astronomy-site/your_hypotheses/delete_post/<int:post_id>")
@@ -191,6 +201,11 @@ def delete_post(post_id):
     user = data_base_session.query(User).filter(User.id == post.user_id).first()
     if user.username != current_user.username:
         return redirect(url_for("your_hypotheses"))
+    print(data_base_session.query(Comments).filter(Comments.post_id == post_id).all())
+    for i in data_base_session.query(Comments).filter(Comments.post_id == post_id).all():
+        print(i)
+        data_base_session.delete(i)
+        data_base_session.commit()
     data_base_session.delete(post)
     data_base_session.commit()
     return redirect(url_for("your_hypotheses"))
@@ -212,6 +227,24 @@ def edit_post(post_id):
         data_base_session.commit()
         return redirect(url_for("your_hypotheses"))
     return render_template("edit_post.html", title="Edit post", post=post)
+
+
+@app.route("/astronomy-site/Kant-Laplace")
+@login_required
+def kant_laplace_hypothesis():
+    return render_template("kant-laplace.html", title='Kant-Laplace')
+
+
+@app.route("/astronomy-site/James-Jeans")
+@login_required
+def james_jeans_hypothesis():
+    return render_template("james_jeans.html")
+
+
+@app.route("/astronomy-site/Modern-hypothesis")
+@login_required
+def modern_hypothesis():
+    return render_template("modern.html")
 
 
 @ app.route("/astronomy-site/your_hypotheses/claim/<int:post_id>", methods=['GET', 'POST'])
@@ -248,8 +281,8 @@ def write_hypothesis():
         record.content = form.content.data
         length = len(data_base_session.query(Records).all()) + 1
         record.post_url = f'/astronomy-site/your_hypotheses/{length}'
-        record.delete = f'astronomy-site/your_hypotheses/delete_post/{length}'
-        record.edit = f'astronomy-site/your_hypotheses/edit_post/{length}'
+        record.delete = f'/astronomy-site/your_hypotheses/delete_post/{length}'
+        record.edit = f'/astronomy-site/your_hypotheses/edit_post/{length}'
         record.claim = f'/astronomy-site/your_hypotheses/claim/{length}'
         current_user.records.append(record)
         data_base_session.merge(current_user)

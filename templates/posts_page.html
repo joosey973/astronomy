@@ -73,9 +73,7 @@
         <div class="container">
             <h2>Your hypotheses</h2><br>
             <link rel="stylesheet" href="/static/css/your_hyp.css">
-            <button class="btn btn-dark">
-                <a href="/astronomy-site/your_hypotheses/write_hypothesis">Write your own record</a>
-            </button>
+            <a class="btn btn-dark" href="/astronomy-site/your_hypotheses/write_hypothesis">Write your own record</a>
             {%for info, user in users_and_records_dict.items()%}
             <a href={{info.post_url}}>
                 <div class="container" style="max-width: 100%; border: solid grey;">

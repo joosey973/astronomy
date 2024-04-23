@@ -104,7 +104,6 @@
                 type="submit">Edit</a>
               <a class="btn btn-md" style="background-color: darkslateblue;" data-bs-toggle="collapse"
                 data-bs-target="#demo3">Comments</a>
-            <input type="number" name="isdelete" id="isdelete" value={{post.id}} required>
             <a class="btn btn-danger btn-md text-white" href={{post.delete}}>Delete</a>
           </div>
           {%endif%}
@@ -115,7 +114,6 @@
             <form method="post">
               {{form.hidden_tag()}}
               <div class="container-fluid mt-5 mb-5" style="text-align: center;">
-                <input type="number" value={{post.id}} name="write_comment">
                 {{form.submit(type='submit', class='btn btn-lg', style='background-color: darkslateblue')}}
               </div>
               {%for field in form if field.name != 'csrf_token' and field.name != 'submit'%}
@@ -124,10 +122,8 @@
               {%endfor%}
             </form>
             <br><br>
-            <form method="post">
+
               {%for comment, user in comments_dict.items()%}
-              <div class="container text-white"
-                style="width: 150%; border: solid grey; word-wrap: break-word; flex-wrap: wrap;">
                 <div class="info_container" style="word-wrap: break-word; flex-wrap: wrap;">
                   <div class="avatar_name">
                     <a href={{user.profile_url}}>
@@ -149,21 +145,14 @@
                 <textarea class="bg-dark text-white" disabled
                   style="width: 100%; height: 100%; margin: 0; padding:10px; font-size: 24px; height: 240px;">{{comment.comment_content}}</textarea>
                 <br><br>
-                {%if post.user_id != current_user.id%}
-                <div class="button_container" style="display: flex; justify-content: space-between; flex-wrap: wrap;">
-                  <p></p>
-                  <a class="btn btn-md btn-danger" href={{comment.claim}}>Claim</a>
-                </div>
-                {%else%}
+                {%if comment.commenter_username == current_user.username%}
                 <div class="button_container" style="display: flex; justify-content: space-between;flex-wrap: wrap;">
                   <a href={{comment.edit}} class="btn btn-md" style="background-color: rgb(235, 99, 50); color: white;">Edit</a>
                   <a class="btn btn-danger btn-md text-white" href={{comment.delete}}>Delete</a>
                 </div>
                 {%endif%}
                 <br>
-              </div>
               {%endfor%}
-            </form>
           </div>
           <br>
         </div>
