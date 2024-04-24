@@ -247,7 +247,7 @@ def modern_hypothesis():
     return render_template("modern.html")
 
 
-@ app.route("/astronomy-site/your_hypotheses/claim/<int:post_id>", methods=['GET', 'POST'])
+@app.route("/astronomy-site/your_hypotheses/claim/<int:post_id>", methods=['GET', 'POST'])
 @ login_required
 def claim_to_the_post(post_id):
     data_base_session = new_session()
@@ -270,8 +270,8 @@ def message_after_claim():
     return redirect(url_for("your_hypotheses"))
 
 
-@ app.route("/astronomy-site/your_hypotheses/write_hypothesis", methods=['POST', 'GET'])
-@ login_required
+@app.route("/astronomy-site/your_hypotheses/write_hypothesis", methods=['POST', 'GET'])
+@login_required
 def write_hypothesis():
     form = RecordForm()
     if form.validate_on_submit():
